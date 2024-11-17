@@ -1,10 +1,11 @@
 class Personagem:
-    def __init__(self, vida, ataque, defesa, velocidade, nome):
+    def __init__(self, vida, ataque, defesa, velocidade, nome, imagem):
         self.vida = vida
         self.ataque = ataque
         self.defesa = defesa
         self.velocidade = velocidade
         self.nome = nome
+        self.imagem = imagem
 
     def __str__(self): 
         return f"{self.nome}"
@@ -31,3 +32,6 @@ class Personagem:
             return True
         else:
             return False
+        
+    def link_imagem(personagem):
+        return f"{personagem.imagem}"

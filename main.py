@@ -1,19 +1,18 @@
 from personagem import *
 import pygame
-from tela_inicial import *
+import tela_inicial
+import batalha
 
-paladin = Personagem(0, 0, 0, 0, "paladin")
-rogue = Personagem(0, 0, 0, 0, "rogue")
-wizard = Personagem(0, 0, 0, 0, "wizard")
-hunter = Personagem(0, 0, 0, 0, "hunter")
-priest = Personagem(0, 0, 0, 0, "priest")
+paladin = Personagem(0, 0, 0, 0, "paladin", "imagens/Paladino.png")
+rogue = Personagem(0, 0, 0, 0, "rogue", "imagens/rogue.png")
+wizard = Personagem(0, 0, 0, 0, "wizard", "imagens/wizardfinal 2.png")
+hunter = Personagem(0, 0, 0, 0, "hunter", "imagens/hunter sprite.png")
+priest = Personagem(0, 0, 0, 0, "priest", "imagens/PRIEST_Shadow.png")
 
 lista_personagens = [paladin, rogue, wizard, hunter, priest]
 
 pygame.init()
 pygame.font.init()
-tela = pygame.display.set_mode((1024, 768))
-background = pygame.image.load("imagens/teste 3 ps.png")
 
 executando = True
 while executando:
@@ -21,5 +20,5 @@ while executando:
         if evento.type == pygame.QUIT:
             executando = False
         
-        herois = selecao(lista_personagens)
-        print(f"{herois[0], herois[1], herois[2]}")
+        herois = tela_inicial.selecao(lista_personagens)
+        batalha.batalha(herois)
