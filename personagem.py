@@ -1,9 +1,16 @@
 class Personagem:
-    def __init__(self, vida, ataque, defesa, velocidade):
+    def __init__(self, vida, ataque, defesa, velocidade, nome):
         self.vida = vida
         self.ataque = ataque
         self.defesa = defesa
         self.velocidade = velocidade
+        self.nome = nome
+
+    def __str__(self): 
+        return f"{self.nome}"
+    
+    def __repr__(self):
+        return f"{self.nome}"
 
     def maior_velocidade(lista_personagens):
         mais_rapido = lista_personagens[0] 
