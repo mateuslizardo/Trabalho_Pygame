@@ -1,11 +1,12 @@
 class Personagem:
-    def __init__(self, vida, ataque, defesa, velocidade, nome, imagem):
+    def __init__(self, vida, ataque, defesa, velocidade, nome, imagem, vida_inicial):
         self.vida = vida
         self.ataque = ataque
         self.defesa = defesa
         self.velocidade = velocidade
         self.nome = nome
         self.imagem = imagem
+        self.vida_inicial = vida_inicial
 
     def __str__(self): 
         return f"{self.nome}"
@@ -14,11 +15,7 @@ class Personagem:
         return f"{self.nome}"
 
     def maior_velocidade(lista_personagens):
-        mais_rapido = lista_personagens[0] 
-        for personagem in lista_personagens: 
-            if personagem.velocidade > mais_rapido.velocidade: 
-                mais_rapido = personagem 
-        return mais_rapido
+        return lista_personagens.sort(key=lambda personagem: personagem.velocidade, reverse=True)
     
     def gera_dano(atacante, atacado):
         dano = (atacante.ataque)*(50/(50+atacado.defesa))
