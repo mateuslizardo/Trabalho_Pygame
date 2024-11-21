@@ -1,10 +1,27 @@
 import pygame
 from personagem import *
 
+ataque = 1
+defesa = 2
+necromante = 3
+esqueleto = 4
+necromancer = Personagem(180, 35, 25, 15, "necromancer", "", 180)
+skeleton = Personagem(150, 25, 20, 10, "skeleton", "", 150)
+inimigos = [necromancer, skeleton]
+
 def batalha(herois):
     cont = 0
+    modo_escolhido = 0
+    clock = pygame.time.Clock()
+    clock.tick(120)
+
     maior_velocidade(herois)
     tela = desenha_batalha(herois)
+    escrever_turno(herois, cont, tela)
+    vida_personagens(herois, tela)
+    pos_seta = ataque
+    desenha_seta(pos_seta, tela)
+    pygame.display.flip()
     
     executando = True
     while executando:
@@ -12,16 +29,131 @@ def batalha(herois):
             if evento.type == pygame.QUIT:
                 executando = False
 
-            desenha_batalha(herois)
-            escrever_turno(herois, cont, tela)
-            vida_personagens(herois, tela)
+            if evento.type == pygame.KEYDOWN:
+                if not(cont == 1 or cont == 3):
+                    if evento.key == pygame.K_RIGHT and pos_seta == ataque:
+                        pos_seta = defesa
+                        bloco_maior = pygame.image.load("imagens/bloco_maior.png")
+                        tela.blit(bloco_maior, (59, 492))
+                        escrever_turno(herois, cont, tela)
+                        desenha_seta(pos_seta, tela)
+                        pygame.display.flip()
 
-            pygame.time.delay(1000)
+                    elif evento.key == pygame.K_LEFT and pos_seta == defesa:
+                        pos_seta = ataque
+                        bloco_maior = pygame.image.load("imagens/bloco_maior.png")
+                        tela.blit(bloco_maior, (59, 492))
+                        desenha_seta(pos_seta, tela)  
+                        escrever_turno(herois, cont, tela)
+                        pygame.display.flip()
 
-            if cont < 4:
-                cont += 1
-            elif cont == 4:
-                cont = 0
+                    elif evento.key == pygame.K_z and modo_escolhido == 0:
+                        modo_escolhido = pos_seta
+                        if pos_seta == ataque:
+                            pos_seta = necromante
+                            bloco_maior = pygame.image.load("imagens/bloco_maior.png")
+                            tela.blit(bloco_maior, (59, 492))
+                            desenha_seta(pos_seta, tela)  
+                            escrever_turno(herois, cont, tela)
+                            pygame.display.flip()
+                            continue
+                    
+                    if modo_escolhido == ataque:
+                        if evento.key == pygame.K_x:
+                            modo_escolhido = 0
+                            pos_seta = ataque
+                            desenha_batalha(herois)
+                            desenha_seta(pos_seta, tela)  
+                            escrever_turno(herois, cont, tela)
+                            vida_personagens(herois, tela)
+                            pygame.display.flip()
+                            
+                        elif evento.key == pygame.K_DOWN and pos_seta == necromante:
+                            pos_seta = esqueleto
+                            desenha_batalha(herois)
+                            desenha_seta(pos_seta, tela)  
+                            escrever_turno(herois, cont, tela)
+                            vida_personagens(herois, tela)
+                            pygame.display.flip()
+
+                        elif evento.key == pygame.K_UP and pos_seta == esqueleto:
+                            pos_seta = necromante
+                            desenha_batalha(herois)
+                            desenha_seta(pos_seta, tela)  
+                            escrever_turno(herois, cont, tela)
+                            vida_personagens(herois, tela)
+                            pygame.display.flip()
+
+                        elif evento.key == pygame.K_z:
+                            dano = herois[cont//2].gera_dano(inimigos[pos_seta - 3])
+                            inimigos[pos_seta - 3].vida -= dano
+                            print(inimigos[pos_seta - 3].vida, pos_seta)
+
+                            if cont < 4:
+                                cont += 1
+                            elif cont == 4:
+                                cont = 0
+
+                            modo_escolhido = 0
+                            pos_seta = ataque
+                            desenha_batalha(herois)
+                            desenha_seta(pos_seta, tela)  
+                            escrever_turno(herois, cont, tela)
+                            vida_personagens(herois, tela)
+                            pygame.display.flip()
+
+                    elif modo_escolhido == defesa:
+                        herois[cont].defesa = herois[cont].acao_defesa()
+                        print("entrou")
+                        if cont < 4:
+                            cont += 1
+                        elif cont == 4:
+                            cont = 0
+
+                        modo_escolhido = 0
+                        pos_seta = ataque
+                        bloco_maior = pygame.image.load("imagens/bloco_maior.png")
+                        tela.blit(bloco_maior, (59, 492))
+                        escrever_turno(herois, cont, tela)
+                        pygame.display.flip()
+
+                elif cont == 1:
+                    dano = inimigos[0].gera_dano(herois[0])
+                    herois[0].vida -= dano
+                    herois[1].defesa /= 2
+
+                    if cont < 4:
+                        cont += 1
+                    elif cont == 4:
+                        cont = 0
+
+                    bloco_maior = pygame.image.load("imagens/bloco_maior.png")
+                    bloco_menor = pygame.image.load("imagens/bloco_menor.png")
+                    tela.blit(bloco_maior, (59, 492))
+                    tela.blit(bloco_menor, (604, 492))
+                    escrever_turno(herois, cont, tela)
+                    vida_personagens(herois, tela)
+                    desenha_seta(pos_seta, tela)
+                    pygame.display.flip()
+
+                elif cont == 3:
+                    dano = inimigos[1].gera_dano(herois[1])
+                    herois[1].vida -= dano
+                    herois[1].defesa /= 2
+
+                    if cont < 4:
+                        cont += 1
+                    elif cont == 4:
+                        cont = 0
+
+                    bloco_maior = pygame.image.load("imagens/bloco_maior.png")
+                    bloco_menor = pygame.image.load("imagens/bloco_menor.png")
+                    tela.blit(bloco_maior, (59, 492))
+                    tela.blit(bloco_menor, (604, 492))
+                    escrever_turno(herois, cont, tela)
+                    vida_personagens(herois, tela)
+                    desenha_seta(pos_seta, tela)
+                    pygame.display.flip()
 
 def maior_velocidade(lista_personagens):
         return lista_personagens.sort(key=lambda personagem: personagem.velocidade, reverse=True)
@@ -42,7 +174,6 @@ def desenha_batalha(herois):
     tela.blit(heroi1, (110, 269))
     tela.blit(heroi2, (221, 360))
 
-    pygame.display.flip()
     return tela
 
 def escrever_turno(herois, cont, tela):
@@ -94,8 +225,6 @@ def escrever_turno(herois, cont, tela):
         texto = fonte.render("skill", True, (255, 255, 255))
         tela.blit(texto, (420, 632))
 
-    pygame.display.flip()
-
 def vida_personagens(herois, tela):
     fonte = pygame.font.SysFont('Inter', 48)
 
@@ -117,4 +246,27 @@ def vida_personagens(herois, tela):
     texto = fonte.render(f"{herois[2].vida} / {herois[2].vida_inicial}", True, (255, 255, 255))
     tela.blit(texto, (786, 632))
 
-    pygame.display.flip()
+def desenha_seta(pos_seta, tela):
+    if pos_seta == ataque:
+        seta = pygame.image.load("imagens/introcomp_seta.png")
+        seta = pygame.transform.scale(seta, (256, 256))
+        seta = pygame.transform.rotate(seta, 90)
+        tela.blit(seta, (42, 525))
+        
+    elif pos_seta == defesa:
+        seta = pygame.image.load("imagens/introcomp_seta.png")
+        seta = pygame.transform.scale(seta, (256, 256))
+        seta = pygame.transform.rotate(seta, 90)
+        tela.blit(seta, (352, 525))
+
+    elif pos_seta == necromante:
+        seta = pygame.image.load("imagens/introcomp_seta.png")
+        seta = pygame.transform.scale(seta, (256, 256))
+        seta = pygame.transform.rotate(seta, 90)
+        tela.blit(seta, (674, 170))
+
+    elif pos_seta == esqueleto:
+        seta = pygame.image.load("imagens/introcomp_seta.png")
+        seta = pygame.transform.scale(seta, (256, 256))
+        seta = pygame.transform.rotate(seta, 90)
+        tela.blit(seta, (639, 340))

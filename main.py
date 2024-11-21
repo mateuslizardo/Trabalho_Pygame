@@ -3,11 +3,11 @@ import pygame
 import tela_inicial
 import batalha
 
-paladin = Personagem(200, 0, 0, 1, "paladin", "imagens/Paladino.png", 200)
-rogue = Personagem(80, 0, 0, 2, "rogue", "imagens/rogue.png", 80)
-wizard = Personagem(80, 0, 0, 3, "wizard", "imagens/wizardfinal 2.png", 80)
-hunter = Personagem(200, 0, 0, 4, "hunter", "imagens/hunter sprite.png", 200)
-priest = Personagem(200, 0, 0, 5, "priest", "imagens/PRIEST_Shadow.png", 200)
+paladin = Personagem(250, 20, 40, 15, "paladin", "imagens/Paladino.png", 250)
+rogue = Personagem(120, 30, 20, 30, "rogue", "imagens/rogue.png", 120)
+wizard = Personagem(100, 40, 10, 25, "wizard", "imagens/wizardfinal 2.png", 100)
+hunter = Personagem(180, 25, 30, 20, "hunter", "imagens/hunter sprite.png", 180)
+priest = Personagem(150, 10, 35, 10, "priest", "imagens/PRIEST_Shadow.png", 150)
 
 lista_personagens = [paladin, rogue, wizard, hunter, priest]
 

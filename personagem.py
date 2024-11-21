@@ -18,7 +18,7 @@ class Personagem:
         return lista_personagens.sort(key=lambda personagem: personagem.velocidade, reverse=True)
     
     def gera_dano(atacante, atacado):
-        dano = (atacante.ataque)*(50/(50+atacado.defesa))
+        dano = int((atacante.ataque)*(50/(50+atacado.defesa)))
         return dano
     
     def acao_defesa(personagem):
