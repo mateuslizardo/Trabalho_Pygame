@@ -7,11 +7,14 @@ necromante = 3
 esqueleto = 4
 necromancer = Personagem(180, 35, 25, 15, "necromancer", "", 180)
 skeleton = Personagem(150, 25, 20, 10, "skeleton", "", 150)
-inimigos = [necromancer, skeleton]
+
 
 def batalha(herois):
+    global inimigos
+    inimigos = [necromancer, skeleton]
     cont = 0
     modo_escolhido = 0
+    escolheu_defender = False
     clock = pygame.time.Clock()
     clock.tick(120)
 
@@ -30,7 +33,7 @@ def batalha(herois):
                 executando = False
 
             if evento.type == pygame.KEYDOWN:
-                if not(cont == 1 or cont == 3):
+                if not(cont == 1 or cont == 3 or cont == 5):
                     if evento.key == pygame.K_RIGHT and pos_seta == ataque:
                         pos_seta = defesa
                         bloco_maior = pygame.image.load("imagens/bloco_maior.png")
@@ -89,25 +92,24 @@ def batalha(herois):
                             inimigos[pos_seta - 3].vida -= dano
                             print(inimigos[pos_seta - 3].vida, pos_seta)
 
-                            if cont < 4:
+                            if cont < 5:
                                 cont += 1
-                            elif cont == 4:
+                            elif cont == 5:
                                 cont = 0
 
                             modo_escolhido = 0
                             pos_seta = ataque
                             desenha_batalha(herois)
-                            desenha_seta(pos_seta, tela)  
                             escrever_turno(herois, cont, tela)
                             vida_personagens(herois, tela)
                             pygame.display.flip()
 
                     elif modo_escolhido == defesa:
-                        herois[cont].defesa = herois[cont].acao_defesa()
-                        print("entrou")
-                        if cont < 4:
+                        herois[cont//2].defesa = herois[cont//2].acao_defesa()
+                        escolheu_defender = True
+                        if cont < 5:
                             cont += 1
-                        elif cont == 4:
+                        elif cont == 5:
                             cont = 0
 
                         modo_escolhido = 0
@@ -120,11 +122,13 @@ def batalha(herois):
                 elif cont == 1:
                     dano = inimigos[0].gera_dano(herois[0])
                     herois[0].vida -= dano
-                    herois[1].defesa /= 2
+                    if escolheu_defender == True:
+                        herois[0].defesa /= 2
+                        escolheu_defender = False
 
-                    if cont < 4:
+                    if cont < 5:
                         cont += 1
-                    elif cont == 4:
+                    elif cont == 5:
                         cont = 0
 
                     bloco_maior = pygame.image.load("imagens/bloco_maior.png")
@@ -139,11 +143,13 @@ def batalha(herois):
                 elif cont == 3:
                     dano = inimigos[1].gera_dano(herois[1])
                     herois[1].vida -= dano
-                    herois[1].defesa /= 2
+                    if escolheu_defender == True:
+                        herois[1].defesa /= 2
+                        escolheu_defender = False
 
-                    if cont < 4:
+                    if cont < 5:
                         cont += 1
-                    elif cont == 4:
+                    elif cont == 5:
                         cont = 0
 
                     bloco_maior = pygame.image.load("imagens/bloco_maior.png")
@@ -154,6 +160,31 @@ def batalha(herois):
                     vida_personagens(herois, tela)
                     desenha_seta(pos_seta, tela)
                     pygame.display.flip()
+
+                elif cont == 5:
+                    dano = inimigos[1].gera_dano(herois[2])
+                    herois[2].vida -= dano
+                    if escolheu_defender == True:
+                        herois[2].defesa /= 2
+                        escolheu_defender = False
+
+                    if cont < 5:
+                        cont += 1
+                    elif cont == 5:
+                        cont = 0
+
+                    bloco_maior = pygame.image.load("imagens/bloco_maior.png")
+                    bloco_menor = pygame.image.load("imagens/bloco_menor.png")
+                    tela.blit(bloco_maior, (59, 492))
+                    tela.blit(bloco_menor, (604, 492))
+                    escrever_turno(herois, cont, tela)
+                    vida_personagens(herois, tela)
+                    desenha_seta(pos_seta, tela)
+                    pygame.display.flip()
+
+            herois, inimigos = alguem_morreu(herois, inimigos)
+            if len(herois) == 0 or len(inimigos) == 0:
+                executando = False
 
 def maior_velocidade(lista_personagens):
         return lista_personagens.sort(key=lambda personagem: personagem.velocidade, reverse=True)
@@ -208,7 +239,7 @@ def escrever_turno(herois, cont, tela):
         texto = fonte.render("skill", True, (255, 255, 255))
         tela.blit(texto, (420, 632))
 
-    elif cont == 3:
+    elif cont == 3 or cont == 5:
         texto = fonte.render("Skeleton's turn!", True, (255, 255, 255))
         tela.blit(texto, (112, 518))
 
@@ -270,3 +301,14 @@ def desenha_seta(pos_seta, tela):
         seta = pygame.transform.scale(seta, (256, 256))
         seta = pygame.transform.rotate(seta, 90)
         tela.blit(seta, (639, 340))
+
+def alguem_morreu(herois, inimigos):
+    for i in len(herois):
+        if herois[i].verifica_morte() == True:
+            herois[i].pop(i)
+
+    for i in len(inimigos):
+        if inimigos[i].verifica_morte() == True:
+            inimigos[i].pop(i)
+
+    return herois, inimigos
