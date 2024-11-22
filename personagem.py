@@ -14,21 +14,26 @@ class Personagem:
     def __repr__(self):
         return f"{self.nome}"
 
+    #Ordena as listas com base na velocidade
     def maior_velocidade(lista_personagens):
         return lista_personagens.sort(key=lambda personagem: personagem.velocidade, reverse=True)
     
+    #Retorna o dano causado pelas ações
     def gera_dano(atacante, atacado):
         dano = int((atacante.ataque)*(50/(50+atacado.defesa)))
         return dano
     
+    #Diminui a quantidade de dano que o personagem receberá na próxima partida
     def acao_defesa(personagem):
         return personagem.defesa * 2
     
+    #retorna se o personagem morreu
     def verifica_morte(personagem):
         if personagem.vida <= 0:
             return True
         else:
             return False
         
+    #retorna o link da imagem
     def link_imagem(personagem):
         return f"{personagem.imagem}"
