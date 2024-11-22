@@ -26,4 +26,4 @@ def resultado(herois, venceu):
 
         pygame.display.flip()
 
-    pygame.time.delay(10000)
+    pygame.time.delay(5000)

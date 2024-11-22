@@ -15,7 +15,7 @@ lista_personagens = [paladin, rogue, wizard, hunter, priest]
 
 #Inicializações
 pygame.init()
-pygame.font.init()
+#pygame.font.init()
 
 #Loop principal
 executando = True
@@ -31,3 +31,5 @@ while executando:
     venceu = batalha.batalha(herois)
     tela_final.resultado(herois_copia, venceu)
     executando = False
+    
+pygame.quit()
